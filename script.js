@@ -1,97 +1,132 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const dataForm = document.getElementById('dataForm');
-    const dataTableBody = document.getElementById('dataTableBody');
-    const saveButton = document.querySelector('.btn-primary');
+document.addEventListener("DOMContentLoaded", () => {
+  const loginForm = document.getElementById("loginForm");
+  const dataForm = document.getElementById("dataForm");
+  const dataTableBody = document.getElementById("dataTableBody");
+  const saveButton = document.querySelector(".btn-primary");
 
-    // Función para cargar datos desde localStorage
+  // ---------------------------
+  // LOGIN
+  // ---------------------------
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const response = await fetch("https://aty1102-loginusuariosbackend-production.up.railway.app/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (!response.ok) throw new Error("Usuario o contraseña incorrectos");
+
+        const data = await response.json();
+        localStorage.setItem("access_token", data.access_token);
+        window.location.href = "mantenedor.html";
+      } catch (err) {
+        const errorMsg = document.getElementById("errorMsg");
+        if (errorMsg) {
+          errorMsg.style.display = "block";
+          errorMsg.textContent = err.message;
+        }
+      }
+    });
+  }
+
+  // ---------------------------
+  // MANTENEDOR DE DATOS
+  // ---------------------------
+  if (dataForm && dataTableBody) {
+    // Verificar si el usuario está logueado
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      window.location.href = "index.html";
+      return;
+    }
+
     function loadData() {
-        const jsonData = localStorage.getItem('dataRecords');
-        return jsonData ? JSON.parse(jsonData) : [];
+      const jsonData = localStorage.getItem("dataRecords");
+      return jsonData ? JSON.parse(jsonData) : [];
     }
 
-    // Función para guardar datos en localStorage
     function saveData(data) {
-        localStorage.setItem('dataRecords', JSON.stringify(data));
+      localStorage.setItem("dataRecords", JSON.stringify(data));
     }
 
-    // Función para renderizar la tabla
     function renderTable() {
-        const records = loadData();
-        dataTableBody.innerHTML = ''; // Limpiar la tabla antes de renderizar
-        if (records.length > 0) {
-            records.forEach((record, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${record.nombre}</td>
-                    <td>${record.email}</td>
-                    <td>${record.ciudad}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm edit-btn" data-index="${index}">Editar</button>
-                        <button class="btn btn-danger btn-sm delete-btn" data-index="${index}">Eliminar</button>
-                    </td>
-                `;
-                dataTableBody.appendChild(row);
-            });
-        }
-
-        // Agregar listeners a los botones de eliminar
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', handleDelete);
+      const records = loadData();
+      dataTableBody.innerHTML = "";
+      if (records.length > 0) {
+        records.forEach((record, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${record.nombre}</td>
+            <td>${record.email}</td>
+            <td>${record.ciudad}</td>
+            <td>
+              <button class="btn btn-warning btn-sm edit-btn" data-index="${index}">Editar</button>
+              <button class="btn btn-danger btn-sm delete-btn" data-index="${index}">Eliminar</button>
+            </td>
+          `;
+          dataTableBody.appendChild(row);
         });
+      }
 
-        // Agregar listeners a los botones de editar
-        document.querySelectorAll('.edit-btn').forEach(button => {
-            button.addEventListener('click', handleEdit);
-        });
+      document.querySelectorAll(".delete-btn").forEach(button => {
+        button.addEventListener("click", handleDelete);
+      });
+
+      document.querySelectorAll(".edit-btn").forEach(button => {
+        button.addEventListener("click", handleEdit);
+      });
     }
 
-    // Manejar el envío del formulario (para agregar y editar)
-    dataForm.addEventListener('submit', (e) => {
-        e.preventDefault();
+    dataForm.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-        const nombre = document.getElementById('nombre').value;
-        const email = document.getElementById('email').value;
-        const ciudad = document.getElementById('ciudad').value;
-        const records = loadData();
+      const nombre = document.getElementById("nombre").value;
+      const email = document.getElementById("email").value;
+      const ciudad = document.getElementById("ciudad").value;
+      const records = loadData();
 
-        const editingIndex = dataForm.dataset.editingIndex;
-        if (editingIndex !== undefined) {
-            records[editingIndex] = { nombre, email, ciudad };
-            delete dataForm.dataset.editingIndex;
-            saveButton.textContent = 'Guardar Datos';
-        } else {
-            const newRecord = { nombre, email, ciudad };
-            records.push(newRecord);
-        }
+      const editingIndex = dataForm.dataset.editingIndex;
+      if (editingIndex !== undefined) {
+        records[editingIndex] = { nombre, email, ciudad };
+        delete dataForm.dataset.editingIndex;
+        saveButton.textContent = "Guardar Datos";
+      } else {
+        records.push({ nombre, email, ciudad });
+      }
 
-        saveData(records);
-        dataForm.reset();
-        renderTable();
+      saveData(records);
+      dataForm.reset();
+      renderTable();
     });
 
-    // Función para manejar el botón de eliminar
     function handleDelete(e) {
-        const index = e.target.dataset.index;
-        const records = loadData();
-        records.splice(index, 1);
-        saveData(records);
-        renderTable();
+      const index = e.target.dataset.index;
+      const records = loadData();
+      records.splice(index, 1);
+      saveData(records);
+      renderTable();
     }
 
-    // Función para manejar el botón de editar
     function handleEdit(e) {
-        const index = e.target.dataset.index;
-        const records = loadData();
-        const recordToEdit = records[index];
+      const index = e.target.dataset.index;
+      const records = loadData();
+      const recordToEdit = records[index];
 
-        document.getElementById('nombre').value = recordToEdit.nombre;
-        document.getElementById('email').value = recordToEdit.email;
-        document.getElementById('ciudad').value = recordToEdit.ciudad;
+      document.getElementById("nombre").value = recordToEdit.nombre;
+      document.getElementById("email").value = recordToEdit.email;
+      document.getElementById("ciudad").value = recordToEdit.ciudad;
 
-        saveButton.textContent = 'Actualizar Datos';
-        dataForm.dataset.editingIndex = index;
+      saveButton.textContent = "Actualizar Datos";
+      dataForm.dataset.editingIndex = index;
     }
 
-    // Cargar y mostrar los datos al inicio
     renderTable();
+  }
 });
