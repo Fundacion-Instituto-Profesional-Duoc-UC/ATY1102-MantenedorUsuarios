@@ -4,8 +4,9 @@ Disallow: /admin/
 Disallow: /private/
 Disallow: /temp/
 Disallow: /search/
-Allow: /blog/
-Sitemap: https://www.ejemplo.com/sitemap.xml
+Allow: /index.html
+Allow: /script.js
+Allow: /style.css
 
 # Bloque específico para Googlebot
 User-agent: Googlebot
