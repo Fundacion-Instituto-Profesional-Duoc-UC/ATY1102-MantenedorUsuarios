@@ -1,12 +1,10 @@
 # Bloque para todos los rastreadores
 User-agent: *
-Disallow: /admin/
-Disallow: /private/
-Disallow: /temp/
-Disallow: /search/
-Allow: /index.html
+
+Disallow: /index.html
+Allow: /mantenedor.html
 Allow: /script.js
-Allow: /style.css
+Allow: /styles.css
 
 # Bloque específico para Googlebot
 User-agent: Googlebot
