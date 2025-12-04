@@ -1,1 +1,21 @@
+# Bloque para todos los rastreadores
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/
+Disallow: /search/
+Allow: /blog/
+Sitemap: https://www.ejemplo.com/sitemap.xml
 
+# Bloque específico para Googlebot
+User-agent: Googlebot
+Disallow: /old-version/
+Crawl-delay: 5
+
+# Bloque específico para un bot de imágenes
+User-agent: Googlebot-Image
+Disallow: /images/private/
+
+# Bloque para un bot específico que quieres que rastree todo
+User-agent: MyCustomBot
+Allow: /
