@@ -1,7 +1,7 @@
 # Bloque para todos los rastreadores
 User-agent: *
 
-Disallow: /index.html
+Allow: /index.html
 Allow: /mantenedor.html
 Allow: /script.js
 Allow: /styles.css
