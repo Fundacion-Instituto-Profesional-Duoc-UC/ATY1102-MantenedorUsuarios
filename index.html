@@ -43,6 +43,7 @@
 
             if (user === "duoc" && pass === "duoc123") {
                 window.location.href = "mantenedor.html";
+                localStorage.setItem("access_token", "logged_in_duoc_user");
             } else {
                 errorMsg.style.display = "block";
                 errorMsg.textContent = "Usuario o contraseña incorrectos.";
