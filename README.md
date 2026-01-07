@@ -44,8 +44,8 @@ Contraseña: duoc123
 Nota: El sistema verifica la existencia de un token de acceso en el localStorage para permitir la entrada a la sección del mantenedor.
 
 🔧 Instalación y Uso
-Clona este repositorio o descarga los archivos.
+Clona este repositorio, ingresa por medio de GitHub Pages o descarga los archivos.
 
-Abre el archivo index.html en cualquier navegador web moderno. se encuentra activo Pages de Github visitando: 
+Abre el archivo index.html en cualquier navegador web moderno. se encuentra activo Pages de Github visitando: https://fundacion-instituto-profesional-duoc-uc.github.io/ATY1102-MantenedorUsuarios/
 
 Inicia sesión con las credenciales mencionadas arriba para comenzar a gestionar datos.
